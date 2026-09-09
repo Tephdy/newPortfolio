@@ -194,6 +194,12 @@ async function fetchGitHubProfileRepositories() {
         const websiteMatch = repositoryHtml.match(/"sidebarAbout":\{"website":"([^"]*)"/);
         homepage = websiteMatch?.[1]?.replace(/\\u002F/g, '/').replace(/\\\//g, '/') || '';
       }
+
+      if (!homepage) {
+        const pagesUrl = `https://tephdy.github.io/${encodeURIComponent(link.textContent.trim())}/`;
+        const pagesResponse = await fetch(pagesUrl, { method: 'HEAD' });
+        if (pagesResponse.ok) homepage = pagesUrl;
+      }
     } catch (error) {
       console.warn(`Could not inspect ${link.textContent.trim()} homepage:`, error);
     }
