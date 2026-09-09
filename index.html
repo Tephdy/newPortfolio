@@ -112,6 +112,10 @@
     }
 
     @media (max-width: 767px) {
+      body {
+        font-size: clamp(0.78rem, 2.8vw, 0.95rem);
+      }
+
       #loading-screen {
         align-items: stretch;
         justify-content: stretch;
@@ -142,7 +146,7 @@
       }
 
       .window-host {
-        padding: 0 0 3.75rem !important;
+        padding: 0 0 4.25rem !important;
         overflow-x: hidden;
       }
 
@@ -153,7 +157,7 @@
       .app-window {
         top: 0;
         right: 0;
-        bottom: 3.75rem;
+        bottom: 4.25rem;
         left: 0;
         min-width: 0;
         border: 0;
@@ -163,7 +167,7 @@
       .app-window.is-maximized {
         top: 0;
         right: 0;
-        bottom: 3.75rem;
+        bottom: 4.25rem;
         left: 0;
       }
 
@@ -171,6 +175,50 @@
         min-height: 48px;
         padding: 8px 12px;
         cursor: default;
+      }
+
+      .app-window > .retro-titlebar > div:first-child,
+      .app-window > .retro-titlebar > span:first-child {
+        font-size: clamp(0.68rem, 2.8vw, 0.85rem);
+      }
+
+      .app-window > .retro-titlebar > div:first-child {
+        flex: 1 1 auto;
+      }
+
+      .app-window > .retro-titlebar > div:first-child > span {
+        display: block;
+        width: max-content;
+        animation: mobile-header-marquee 12s linear infinite;
+      }
+
+      @keyframes mobile-header-marquee {
+        0%, 15% {
+          transform: translateX(0);
+        }
+        50%, 65% {
+          transform: translateX(-35%);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      .app-window .window-body,
+      .app-window .window-body p,
+      .app-window .window-body label,
+      .app-window .window-body button,
+      .app-window .window-body a {
+        font-size: clamp(0.72rem, 2.7vw, 0.9rem);
+      }
+
+      .app-window .window-body h1 {
+        font-size: clamp(1.15rem, 5vw, 1.5rem);
+      }
+
+      .app-window .window-body h3,
+      .app-window .window-body h4 {
+        font-size: clamp(0.78rem, 3vw, 1rem);
       }
 
       .app-window > .retro-titlebar > div:first-child,
@@ -207,13 +255,17 @@
         display: none;
       }
 
+      .app-window > .retro-titlebar {
+        pointer-events: none;
+      }
+
       .mobile-nav {
         position: fixed;
         right: 0;
         bottom: 0;
         left: 0;
         z-index: 60;
-        height: 3.75rem;
+        height: 4.25rem !important;
         padding: 0.35rem 0.5rem;
         border-top: 3px solid #1e1e1e;
         background: #dcd7cd;
@@ -226,6 +278,8 @@
       .mobile-nav-items {
         display: flex !important;
         width: 100%;
+        box-sizing: border-box;
+        padding: 0.25rem 0.75rem;
         align-items: center;
         justify-content: center;
         gap: 0.75rem !important;
