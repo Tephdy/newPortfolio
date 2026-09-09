@@ -110,16 +110,12 @@ async function fetchGitHubProjects() {
   if (!container) return;
 
   try {
-    const repos = [];
-    let page = 1;
-
-    while (true) {
-      const response = await fetch(`https://api.github.com/users/Tephdy/repos?sort=updated&per_page=100&page=${page}`);
-      if (!response.ok) throw new Error('Failed to fetch GitHub repos');
-      const pageRepos = await response.json();
-      repos.push(...pageRepos);
-      if (pageRepos.length < 100) break;
-      page += 1;
+    let repos;
+    try {
+      repos = await fetchGitHubApiRepositories();
+    } catch (apiError) {
+      console.warn('GitHub API unavailable, using profile fallback:', apiError);
+      repos = await fetchGitHubProfileRepositories();
     }
     
     container.innerHTML = '';
@@ -160,8 +156,56 @@ async function fetchGitHubProjects() {
     });
   } catch (error) {
     console.error('GitHub fetch error:', error);
-    container.innerHTML = '<p class="text-xs text-red-600 col-span-3 text-center">Failed to load repositories.</p>';
+    container.innerHTML = '<p class="text-xs text-red-600 col-span-full text-center">Repositories are temporarily unavailable. Please try again later.</p>';
   }
+}
+
+async function fetchGitHubApiRepositories() {
+  const repos = [];
+  let page = 1;
+
+  while (true) {
+    const response = await fetch(`https://api.github.com/users/Tephdy/repos?sort=updated&per_page=100&page=${page}`);
+    if (!response.ok) throw new Error(`GitHub API returned HTTP ${response.status}`);
+    const pageRepos = await response.json();
+    repos.push(...pageRepos);
+    if (pageRepos.length < 100) return repos;
+    page += 1;
+  }
+}
+
+async function fetchGitHubProfileRepositories() {
+  const response = await fetch('https://github.com/Tephdy?tab=repositories');
+  if (!response.ok) throw new Error(`GitHub profile returned HTTP ${response.status}`);
+
+  const document = new DOMParser().parseFromString(await response.text(), 'text/html');
+  const repositoryLinks = [...document.querySelectorAll('a[itemprop="name codeRepository"]')];
+  return Promise.all(repositoryLinks.map(async link => {
+    const card = link.closest('.Box-row') || link.parentElement?.parentElement;
+    const description = card?.querySelector('[itemprop="description"]')?.textContent.trim() || '';
+    const language = card?.querySelector('[itemprop="programmingLanguage"]')?.textContent.trim() || '';
+    const path = link.getAttribute('href');
+    let homepage = '';
+
+    try {
+      const repositoryResponse = await fetch(`https://github.com${path}`);
+      if (repositoryResponse.ok) {
+        const repositoryHtml = await repositoryResponse.text();
+        const websiteMatch = repositoryHtml.match(/"sidebarAbout":\{"website":"([^"]*)"/);
+        homepage = websiteMatch?.[1]?.replace(/\\u002F/g, '/').replace(/\\\//g, '/') || '';
+      }
+    } catch (error) {
+      console.warn(`Could not inspect ${link.textContent.trim()} homepage:`, error);
+    }
+
+    return {
+      name: link.textContent.trim(),
+      description,
+      language,
+      homepage,
+      html_url: `https://github.com${path}`
+    };
+  }));
 }
 
 function openLiveView(repoName, url) {
