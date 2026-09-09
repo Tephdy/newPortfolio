@@ -1,384 +1,272 @@
-/**
- * Portfolio Interactive Scripts & Dynamic Data Integration
- * Author: Joseph Amandy
- */
+// ==========================================
+// JOSEPH AMANDY PORTFOLIO - RETRO OS SCRIPT
+// ==========================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Set Current Copyright Year
-  const yearEl = document.getElementById('year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+// Copyright year initialization
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Initialize Canvas Particle Background
-  initParticleCanvas();
+// Live OS Clock update
+setInterval(() => {
+  const now = new Date();
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
+  const clockEl = document.getElementById('os-clock');
+  if (clockEl) clockEl.textContent = `${hours}:${minutes} ${ampm}`;
+}, 1000);
 
-  // Initialize Dynamic GitHub Repositories
-  initGitHubIntegration('Tephdy');
+// ==========================================
+// RETRO OS LOADING SEQUENCE
+// ==========================================
+window.addEventListener('DOMContentLoaded', () => {
+  const hours = new Date().getHours();
+  let greeting = "HELLO!";
+  if (hours < 12) greeting = "GOOD MORNING!";
+  else if (hours < 18) greeting = "GOOD AFTERNOON!";
+  else greeting = "GOOD EVENING!";
+  
+  const greetingHeader = document.getElementById('greeting-header');
+  if (greetingHeader) greetingHeader.textContent = greeting;
 
-  // Initialize Dynamic Behance Portfolio Items
-  initBehanceIntegration('sephamandy');
+  let progress = 0;
+  const progressBar = document.getElementById('loading-progress');
+  const statusText = document.getElementById('loading-status');
 
-  // Initialize Navigation Controls & Smooth Scrolling
-  initNavigation();
-
-  // Initialize Interactive Live Preview Modal
-  initPreviewModal();
-
-  // Initialize Web3Forms Ajax Contact Form
-  initContactForm();
-
-  // Initialize Scroll Reveal Animations
-  initScrollReveal();
+  const interval = setInterval(() => {
+    progress += 20;
+    if (progressBar) progressBar.style.width = progress + '%';
+    if (statusText) {
+      if (progress === 40) statusText.textContent = "Loading Joseph Amandy OS v1.0 modules...";
+      if (statusText && progress === 80) statusText.textContent = "Mounting virtual file system & GUI...";
+    }
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(dismissLoader, 1000);
+    }
+  }, 600);
 });
 
-/* ==========================================================================
-   1. Canvas Interactive Particle Background
-   ========================================================================== */
-function initParticleCanvas() {
-  const canvas = document.getElementById('bg-canvas');
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  let width = (canvas.width = window.innerWidth);
-  let height = (canvas.height = window.innerHeight);
-
-  window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  });
-
-  const particles = Array.from({ length: 45 }, () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    radius: Math.random() * 1.8 + 0.5,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    alpha: Math.random() * 0.5 + 0.2
-  }));
-
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-
-    particles.forEach((p, index) => {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0) p.x = width;
-      if (p.x > width) p.x = 0;
-      if (p.y < 0) p.y = height;
-      if (p.y > height) p.y = 0;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(59, 130, 246, ${p.alpha})`;
-      ctx.fill();
-
-      // Connect nearby particles with subtle lines
-      for (let j = index + 1; j < particles.length; j++) {
-        const p2 = particles[j];
-        const dx = p.x - p2.x;
-        const dy = p.y - p2.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - dist / 120)})`;
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
-        }
-      }
-    });
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
+function dismissLoader() {
+  const loader = document.getElementById('loading-screen');
+  if (loader) loader.classList.add('hidden');
 }
 
-/* ==========================================================================
-   2. GitHub Integration (Dynamic Repositories via API)
-   ========================================================================== */
-function initGitHubIntegration(username) {
+// ==========================================
+// WINDOW MANAGER LOGIC
+// ==========================================
+function openWindow(id) {
+  // Hide all main content windows
+  ['about-window', 'projects-window', 'skills-window', 'contact-window'].forEach(winId => {
+    const win = document.getElementById(winId);
+    if (win) win.classList.add('hidden');
+  });
+  
+  const targetWin = document.getElementById(id);
+  if (targetWin) {
+    targetWin.classList.remove('hidden');
+  }
+}
+
+function closeWindow(id) {
+  const win = document.getElementById(id);
+  if (win) win.classList.add('hidden');
+}
+
+function minimizeWindow(id) {
+  const win = document.getElementById(id);
+  if (win) win.classList.add('hidden');
+}
+
+function maximizeWindow(id) {
+  const win = document.getElementById(id);
+  if (win) {
+    win.classList.toggle('fixed');
+    win.classList.toggle('inset-4');
+    win.classList.toggle('z-40');
+  }
+}
+
+function toggleStartMenu() {
+  const menu = document.getElementById('start-menu');
+  if (menu) menu.classList.toggle('hidden');
+}
+
+// Close start menu when clicking outside
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('start-menu');
+  const startBtn = e.target.closest('button');
+  if (menu && !menu.contains(e.target) && (!startBtn || !startBtn.getAttribute('onclick')?.includes('toggleStartMenu'))) {
+    menu.classList.add('hidden');
+  }
+});
+
+// ==========================================
+// DYNAMIC GITHUB REPOSITORIES FETCHING (ALL PUBLIC REPOS)
+// ==========================================
+async function fetchGitHubProjects() {
   const container = document.getElementById('github-container');
   if (!container) return;
 
-  fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`)
-    .then((res) => {
-      if (!res.ok) throw new Error('Failed to fetch repositories');
-      return res.json();
-    })
-    .then((repos) => {
-      container.innerHTML = '';
+  try {
+    const repos = [];
+    let page = 1;
 
-      if (repos.length === 0) {
-        container.innerHTML = `<p class="text-gray-400 text-xs col-span-full text-center">No public repositories found.</p>`;
-        return;
-      }
+    while (true) {
+      const response = await fetch(`https://api.github.com/users/Tephdy/repos?sort=updated&per_page=100&page=${page}`);
+      if (!response.ok) throw new Error('Failed to fetch GitHub repos');
+      const pageRepos = await response.json();
+      repos.push(...pageRepos);
+      if (pageRepos.length < 100) break;
+      page += 1;
+    }
+    
+    container.innerHTML = '';
+    
+    if (repos.length === 0) {
+      container.innerHTML = '<p class="text-xs text-gray-700 col-span-3 text-center">No public repositories found.</p>';
+      return;
+    }
 
-      repos.forEach((repo) => {
-        const desc = repo.description || 'Full-Stack Software Development Repository';
-        const lang = repo.language || 'Code';
-        const stars = repo.stargazers_count;
-        const forks = repo.forks_count;
-        const homepage = repo.homepage;
-
-        const card = document.createElement('div');
-        card.className =
-          'glass glass-hover p-6 rounded-2xl flex flex-col justify-between transition-all duration-300 reveal';
-
-        card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider">
-                ${lang}
-              </span>
-              <div class="flex items-center space-x-3 text-xs text-gray-400">
-                <span title="Stars"><i class="far fa-star text-yellow-400 mr-1"></i>${stars}</span>
-                <span title="Forks"><i class="fas fa-code-branch text-blue-400 mr-1"></i>${forks}</span>
-              </div>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2 line-clamp-1">${repo.name}</h3>
-            <p class="text-xs text-gray-400 leading-relaxed mb-6 line-clamp-3">${desc}</p>
+    repos.forEach(repo => {
+      const card = document.createElement('div');
+      card.className = 'retro-window p-4 bg-white border-2 border-[#1e1e1e] flex flex-col justify-between shadow-[2px_2px_0px_#1e1e1e]';
+      const liveView = repo.homepage?.trim()
+        ? '<button type="button" class="retro-btn live-view-button px-2.5 py-1 text-[10px] bg-[#f4a261]"><i class="fas fa-eye mr-1"></i>Live View</button>'
+        : '<span class="text-[10px] text-gray-500" title="No live site is configured for this repository">No live view</span>';
+      card.innerHTML = `
+        <div>
+          <div class="flex items-center space-x-2 mb-2">
+            <i class="fas fa-folder text-[#f4a261] text-xl"></i>
+            <h4 class="font-bold text-xs truncate max-w-[150px]" title="${repo.name}">${repo.name}</h4>
           </div>
-
-          <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between">
-            <a href="${repo.html_url}" target="_blank" class="text-xs font-semibold text-gray-300 hover:text-white transition-colors flex items-center space-x-1.5">
-              <i class="fab fa-github text-sm"></i>
-              <span>Code</span>
-            </a>
-            ${
-              homepage
-                ? `<button onclick="openPreview('${repo.name}', '${homepage}')" class="px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 text-xs font-semibold transition-all flex items-center space-x-1">
-                    <i class="fas fa-eye text-[10px]"></i>
-                    <span>Live Preview</span>
-                   </button>`
-                : ''
-            }
+          <p class="text-[10px] text-gray-600 mb-4 line-clamp-2">${repo.description || 'No description provided.'}</p>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-200">
+          <span class="text-[9px] font-mono bg-gray-100 px-1 border border-gray-400">${repo.language || 'Code'}</span>
+          <div class="flex items-center gap-1">
+            ${liveView}
+            <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="retro-btn px-2.5 py-1 text-[10px]"><i class="fab fa-github mr-1"></i>Open Repo</a>
           </div>
-        `;
-
-        container.appendChild(card);
-      });
-
-      // Refresh reveal observer for dynamically created cards
-      initScrollReveal();
-    })
-    .catch((err) => {
-      console.error(err);
-      container.innerHTML = `
-        <div class="col-span-full text-center py-8 text-xs text-gray-500">
-          Unable to dynamically load GitHub repositories right now. Visit 
-          <a href="https://github.com/${username}" target="_blank" class="text-blue-400 hover:underline">GitHub directly</a>.
         </div>
       `;
+      container.appendChild(card);
+      const liveButton = card.querySelector('.live-view-button');
+      if (liveButton) {
+        liveButton.dataset.liveUrl = repo.homepage.trim();
+        liveButton.addEventListener('click', () => openLiveView(repo.name, liveButton.dataset.liveUrl));
+      }
     });
-}
-
-/* ==========================================================================
-   3. Behance Portfolio Integration
-   ========================================================================== */
-function initBehanceIntegration(username) {
-  const container = document.getElementById('behance-container');
-  if (!container) return;
-
-  const designItems = [
-    {
-      title: 'Brand Identity & Visual Graphics',
-      category: 'Branding & UI',
-      desc: 'High-impact promotional media, social collateral, and vector graphics built with custom design workflows.',
-      link: `https://www.behance.net/${username}`
-    },
-    {
-      title: 'UI / UX Design Systems',
-      category: 'Interface Design',
-      desc: 'Modern web layouts, dark-mode color palettes, and component library wireframes tailored for software systems.',
-      link: `https://www.behance.net/${username}`
-    },
-    {
-      title: 'Digital Artwork & Media Assets',
-      category: 'Graphic Design',
-      desc: 'Vector illustrations, logo compositions, and digital marketing materials focused on sleek aesthetics.',
-      link: `https://www.behance.net/${username}`
-    }
-  ];
-
-  container.innerHTML = '';
-  designItems.forEach((item) => {
-    const card = document.createElement('div');
-    card.className =
-      'glass glass-hover p-6 rounded-2xl flex flex-col justify-between transition-all duration-300 reveal';
-
-    card.innerHTML = `
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <span class="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
-            ${item.category}
-          </span>
-          <i class="fab fa-behance text-purple-400 text-base"></i>
-        </div>
-        <h3 class="text-lg font-bold text-white mb-2">${item.title}</h3>
-        <p class="text-xs text-gray-400 leading-relaxed mb-6">${item.desc}</p>
-      </div>
-
-      <div class="pt-4 border-t border-gray-800/80">
-        <a href="${item.link}" target="_blank" class="inline-flex items-center space-x-2 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors">
-          <span>Explore Behance Project</span>
-          <i class="fas fa-arrow-right text-[10px]"></i>
-        </a>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-/* ==========================================================================
-   4. Navigation & Mobile Menu Handler
-   ========================================================================== */
-function initNavigation() {
-  const menuBtn = document.getElementById('menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const mobileLinks = document.querySelectorAll('.mobile-link');
-
-  if (menuBtn && mobileMenu) {
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-
-    mobileLinks.forEach((link) => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-      });
-    });
+  } catch (error) {
+    console.error('GitHub fetch error:', error);
+    container.innerHTML = '<p class="text-xs text-red-600 col-span-3 text-center">Failed to load repositories.</p>';
   }
 }
 
-/* ==========================================================================
-   5. Interactive Live Preview Modal & Viewport Controls
-   ========================================================================== */
-function initPreviewModal() {
-  const modal = document.getElementById('preview-modal');
-  const closeModal = document.getElementById('close-modal');
-  const iframe = document.getElementById('modal-iframe');
+function openLiveView(repoName, url) {
+  const modal = document.getElementById('live-view-modal');
+  const frame = document.getElementById('live-view-frame');
+  const title = document.getElementById('live-view-title');
+  if (!modal || !frame || !title || !url) return;
 
-  if (!modal || !closeModal) return;
-
-  closeModal.addEventListener('click', () => {
-    modal.classList.add('hidden');
-    if (iframe) iframe.src = 'about:blank';
-  });
-
-  // Close modal on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-      modal.classList.add('hidden');
-      if (iframe) iframe.src = 'about:blank';
-    }
-  });
-}
-
-function openPreview(title, url) {
-  const modal = document.getElementById('preview-modal');
-  const modalTitle = document.getElementById('modal-title');
-  const externalLink = document.getElementById('modal-external-link');
-  const iframe = document.getElementById('modal-iframe');
-
-  if (!modal || !iframe) return;
-
-  modalTitle.textContent = title;
-  externalLink.href = url;
-  iframe.src = url;
-
-  setViewport('desktop');
+  title.textContent = `Live View - ${repoName}`;
+  frame.src = url;
   modal.classList.remove('hidden');
 }
 
-function setViewport(device) {
-  const iframe = document.getElementById('modal-iframe');
-  if (!iframe) return;
-
-  iframe.classList.remove('viewport-desktop', 'viewport-tablet', 'viewport-mobile');
-  iframe.classList.add(`viewport-${device}`);
+function openLiveViewInNewTab() {
+  const frame = document.getElementById('live-view-frame');
+  if (frame?.src) window.open(frame.src, '_blank', 'noopener,noreferrer');
 }
 
-/* ==========================================================================
-   6. Web3Forms Ajax Contact Submission & Toast Feedback
-   ========================================================================== */
-function initContactForm() {
-  const form = document.getElementById('contact-form');
-  const submitBtn = document.getElementById('submit-btn');
+function closeLiveView() {
+  const modal = document.getElementById('live-view-modal');
+  const frame = document.getElementById('live-view-frame');
+  if (!modal || !frame) return;
 
-  if (!form) return;
+  modal.classList.add('hidden');
+  frame.src = '';
+}
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
+document.addEventListener('click', event => {
+  if (event.target.id === 'live-view-modal') closeLiveView();
+});
 
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> <span>Sending...</span>`;
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeLiveView();
+});
+
+function showContactStatus(success, message) {
+  const modal = document.getElementById('contact-status-modal');
+  const title = document.getElementById('contact-status-title');
+  const bar = document.getElementById('contact-status-bar');
+  const icon = document.getElementById('contact-status-icon');
+  const messageEl = document.getElementById('contact-status-message');
+  if (!modal || !title || !bar || !icon || !messageEl) return;
+
+  title.textContent = success ? 'Message Sent' : 'Message Error';
+  bar.classList.toggle('blue', success);
+  bar.classList.toggle('yellow', !success);
+  icon.className = success
+    ? 'fas fa-check-circle text-4xl text-green-600 mb-3'
+    : 'fas fa-exclamation-triangle text-4xl text-red-600 mb-3';
+  messageEl.textContent = message;
+  modal.classList.remove('hidden');
+}
+
+function closeContactStatus() {
+  document.getElementById('contact-status-modal')?.classList.add('hidden');
+}
+
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    const originalLabel = submitButton?.textContent;
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending...';
     }
 
-    const formData = new FormData(form);
-
-    fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      body: formData
-    })
-      .then(async (response) => {
-        const json = await response.json();
-        if (response.status === 200) {
-          showToast('Message sent successfully! I will reply shortly.');
-          form.reset();
-        } else {
-          showToast(json.message || 'Something went wrong. Please try again.');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        showToast('Submission error. Please email directly.');
-      })
-      .finally(() => {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = `<i class="fas fa-paper-plane"></i> <span>Send Message</span>`;
-        }
+    try {
+      const response = await fetch(contactForm.action, {
+        method: 'POST',
+        body: new FormData(contactForm),
+        headers: { Accept: 'application/json' }
       });
+      const responseText = await response.text();
+      let result = {};
+      try {
+        result = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        result = { message: responseText };
+      }
+      if (!response.ok || result.success !== true) {
+        throw new Error(result.message || `Web3Forms returned HTTP ${response.status}.`);
+      }
+
+      contactForm.reset();
+      showContactStatus(true, 'Your message was sent successfully. Thank you for reaching out.');
+    } catch (error) {
+      showContactStatus(false, error.message || 'Your message could not be sent. Please try again.');
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalLabel;
+      }
+    }
   });
 }
 
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  const toastMessage = document.getElementById('toast-message');
+document.addEventListener('click', event => {
+  if (event.target.id === 'contact-status-modal') closeContactStatus();
+});
 
-  if (!toast || !toastMessage) return;
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeContactStatus();
+});
 
-  toastMessage.textContent = message;
-  toast.classList.remove('translate-y-20', 'opacity-0');
-  toast.classList.add('translate-y-0', 'opacity-100');
-
-  setTimeout(() => {
-    toast.classList.remove('translate-y-0', 'opacity-100');
-    toast.classList.add('translate-y-20', 'opacity-0');
-  }, 4000);
-}
-
-/* ==========================================================================
-   7. Scroll Reveal Observer
-   ========================================================================== */
-function initScrollReveal() {
-  const reveals = document.querySelectorAll('.reveal');
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-
-  reveals.forEach((el) => observer.observe(el));
-}
+// Run GitHub fetch if container exists
+fetchGitHubProjects();
