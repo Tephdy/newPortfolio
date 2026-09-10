@@ -79,7 +79,7 @@ export function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuProps) {
             onOpenWindow(item.id);
             onClose();
           }}
-          className="w-full text-left px-3 py-2 hover:bg-[#e07a5f] hover:text-white text-xs font-bold font-mono flex items-center space-x-2 transition-colors border border-transparent hover:border-[#1e1e1e]"
+          className="w-full text-left px-3 py-2 hover:bg-[#e07a5f] hover:text-black text-xs font-bold font-mono flex items-center space-x-2 transition-colors border border-transparent hover:border-[#1e1e1e]"
         >
           <span className="flex-shrink-0">{item.icon}</span>
           <span className="truncate">{item.label}</span>

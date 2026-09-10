@@ -73,13 +73,13 @@ body {
   height: calc(100% - 1.5rem) !important;
 }
 
-.app-window > .retro-titlebar {
+.app-window>.retro-titlebar {
   flex: 0 0 auto;
   cursor: grab;
   user-select: none;
 }
 
-.app-window > .retro-titlebar:active {
+.app-window>.retro-titlebar:active {
   cursor: grabbing;
 }
 
@@ -195,7 +195,7 @@ body.is-resizing {
   background: #ffffff;
 }
 
-.skill-bar > span {
+.skill-bar>span {
   display: block;
   height: 100%;
   background: var(--color-coral);
@@ -315,9 +315,11 @@ body.is-resizing {
 }
 
 /* Mobile Responsive Adaptations */
+/* Mobile Responsive Adaptations */
 @media (max-width: 767px) {
   body {
     font-size: clamp(0.78rem, 2.8vw, 0.95rem);
+    color: black;
   }
 
   .window-host {
@@ -347,7 +349,7 @@ body.is-resizing {
     height: calc(100vh - 4.5rem) !important;
   }
 
-  .app-window > .retro-titlebar {
+  .app-window>.retro-titlebar {
     min-height: 48px;
     padding: 8px 12px;
     cursor: default;
@@ -396,9 +398,20 @@ body.is-resizing {
     gap: 0.1rem;
     font-size: 0.6rem;
     line-height: 1;
+    color: #1e1e1e;
   }
 
-  .mobile-nav .mobile-nav-button span {
+  /* FORCES ALL SVG ICONS IN THE TASKBAR TO BLACK */
+  .mobile-nav svg,
+  .mobile-nav button svg,
+  .mobile-nav .mobile-nav-button svg {
+    stroke: #1e1e1e !important;
+    color: #1e1e1e !important;
+    fill: none;
+  }
+
+  /* Only hide the text labels, NOT the icon container */
+  .mobile-nav .mobile-nav-button .mobile-nav-label {
     display: none;
   }
 }

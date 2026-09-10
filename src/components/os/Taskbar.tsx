@@ -49,13 +49,13 @@ export function Taskbar({
   }, []);
 
   const navItems: { id: WindowId; label: string; icon: React.ReactNode }[] = [
-    { id: 'about-window', label: 'Home', icon: <Home size={14} /> },
-    { id: 'projects-window', label: 'Projects', icon: <Folder size={14} /> },
-    { id: 'skills-window', label: 'Skills', icon: <Cpu size={14} /> },
-    { id: 'contact-window', label: 'Contact', icon: <Mail size={14} /> },
-    { id: 'about-me-window', label: 'About', icon: <User size={14} /> },
-    { id: 'games-window', label: 'Arcade', icon: <Gamepad2 size={14} /> },
-    { id: 'behance-window', label: 'Gallery', icon: <Palette size={14} /> },
+    { id: 'about-window', label: 'Home', icon: <Home size={14} color="#1e1e1e" strokeWidth={2.5} /> },
+    { id: 'projects-window', label: 'Projects', icon: <Folder size={14} color="#1e1e1e" strokeWidth={2.5} /> },
+    { id: 'skills-window', label: 'Skills', icon: <Cpu size={14} color="#1e1e1e" strokeWidth={2.5} /> },
+    { id: 'contact-window', label: 'Contact', icon: <Mail size={14} color="#1e1e1e" strokeWidth={2.5} /> },
+    { id: 'about-me-window', label: 'About', icon: <User size={14} color="#1e1e1e" strokeWidth={2.5} /> },
+    { id: 'games-window', label: 'Arcade', icon: <Gamepad2 size={14} color="#1e1e1e" strokeWidth={2.5} /> },
+    { id: 'behance-window', label: 'Gallery', icon: <Palette size={14} color="#1e1e1e" strokeWidth={2.5} /> },
   ];
 
   return (
@@ -65,11 +65,10 @@ export function Taskbar({
         <button
           type="button"
           onClick={onToggleStartMenu}
-          className={`retro-btn px-4 py-1.5 bg-[#e07a5f] text-white flex items-center space-x-1.5 text-xs font-bold font-mono mobile-nav-button mobile-start ${
-            isStartMenuOpen ? 'translate-x-[1px] translate-y-[1px] shadow-none' : ''
-          }`}
+          className={`retro-btn px-4 py-1.5 bg-[#e07a5f] text-[#1e1e1e] flex items-center space-x-1.5 text-xs font-bold font-mono mobile-nav-button mobile-start ${isStartMenuOpen ? 'translate-x-[1px] translate-y-[1px] shadow-none' : ''
+            }`}
         >
-          <Menu size={14} />
+          <Menu size={14} color="#1e1e1e" strokeWidth={2.5} />
           <span>Start</span>
         </button>
 
@@ -90,15 +89,14 @@ export function Taskbar({
                   onOpenWindow(item.id);
                 }
               }}
-              className={`retro-btn px-3 py-1 text-xs font-bold font-mono mobile-nav-button flex items-center space-x-1.5 ${
-                isActive
+              className={`retro-btn px-3 py-1 text-xs text-black font-bold font-mono mobile-nav-button flex items-center space-x-1.5 ${isActive
                   ? 'bg-[#f4a261] border-[#1e1e1e] shadow-[inset_1px_1px_0px_rgba(0,0,0,0.2)]'
                   : 'bg-white hover:bg-[#e9e0d0]'
-              }`}
+                }`}
               title={item.label}
             >
-              <span className="flex-shrink-0">{item.icon}</span>
-              <span className="whitespace-nowrap hidden md:inline">{item.label}</span>
+              <div className="flex-shrink-0" style={{ color: '#1e1e1e', stroke: '#1e1e1e', lineHeight: 0 }}>{item.icon}</div>
+              <span className="whitespace-nowrap hidden md:inline mobile-nav-label">{item.label}</span>
             </button>
           );
         })}

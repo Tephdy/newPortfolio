@@ -124,7 +124,7 @@ Joseph has extensive experience in full-stack engineering, API integrations, and
 
 ---
 
-Ready to bring this project to life? **Click over to the "Outlook Express" tab right here** to send Joseph a message, or drop him an email at **[sephamandy@gmail.com](mailto:sephamandy@gmail.com)**!`;
+Ready to bring this project to life? **Click over to the "Outlook Express" tab right here** to send Joseph a message, or drop him an email at **[tephdytech@gmail.com](mailto:tephdytech@gmail.com)**!`;
   }
 
   // If asking about GitHub
@@ -132,14 +132,13 @@ Ready to bring this project to life? **Click over to the "Outlook Express" tab r
     const repoHighlights =
       repos.length > 0
         ? repos
-            .slice(0, 5)
-            .map(
-              (r) =>
-                `- **[${r.name}](${r.html_url})** (${r.language || 'Full-Stack'}): ${
-                  r.description || 'Public repository by @Tephdy'
-                }${r.homepage ? ` — [Live Demo](${r.homepage})` : ''}`
-            )
-            .join('\n')
+          .slice(0, 5)
+          .map(
+            (r) =>
+              `- **[${r.name}](${r.html_url})** (${r.language || 'Full-Stack'}): ${r.description || 'Public repository by @Tephdy'
+              }${r.homepage ? ` — [Live Demo](${r.homepage})` : ''}`
+          )
+          .join('\n')
         : `- **Automations & Web Portals**: API-driven web systems, database integrations, and automated workflows.\n- **Full-Stack Projects**: Built using JavaScript, Next.js, PHP, Python, and SQL.`;
 
     return `### 💻 Joseph's GitHub Repositories & Engineering Portfolio
