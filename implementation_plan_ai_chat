@@ -1,0 +1,78 @@
+# Enhance Contact Window with AI Chat & Portfolio Knowledge Copilot
+
+Enhance the existing Contact Window into an interactive dual-tab retro terminal experience featuring:
+1. **AI Portfolio Copilot (Instant Chat)**: An intelligent AI assistant that answers questions about Joseph Amandy's skills, dives through his GitHub repositories (`@Tephdy`) and Behance design portfolio, and **creates tailored implementation plans** whenever a visitor asks for a project not currently in his portfolio.
+2. **Outlook Express (Email Form)**: The existing retro contact form submitting to Web3Forms for direct messaging.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **AI Engine & API Key Support**
+> - **Dual-Engine Architecture**:
+>   - **Gemini API (`@google/genai`)**: Wired via Next.js server route (`/api/chat`) using Gemini 2.5 / 2.0 Flash. When a `GEMINI_API_KEY` environment variable is provided, it uses live LLM generation with deep reasoning.
+>   - **Intelligent Built-in Fallback**: If no API key is present (or when deployed statically), the chat seamlessly uses an intelligent knowledge reasoning engine ([`src/lib/portfolioAi.ts`](file:///d:/TEPHDYTECH/WEB%20APP/PORTFOLIO/src/lib/portfolioAi.ts)). This guarantees the chat works 100% out of the box with zero runtime configuration errors.
+
+---
+
+## Key Features & Behavior
+
+### 1. Dual-Tab Contact Window
+- **Tab 1: 💬 AI Copilot / Chat**:
+  - Retro cyber-terminal styling (Windows 98 / Cyber OS chat window).
+  - Quick question prompt pills:
+    - 🚀 *"What projects have you built on GitHub?"*
+    - 🎨 *"Show me your design & branding work on Behance"*
+    - 💡 *"Can you build a custom web app for me?"*
+    - 🛠️ *"What is your primary tech stack?"*
+  - Message history with distinct user and AI chat bubbles, retro timestamps, and avatar badges.
+- **Tab 2: ✉️ Outlook Express Form**:
+  - The classic email contact form with Web3Forms integration, input validation, and retro status dialog modal.
+
+### 2. Deep Portfolio Grounding (GitHub + Behance)
+- Grounded in real-time GitHub repositories from `@Tephdy` (including descriptions, languages, live URLs, repository links).
+- Grounded in the 12 Behance projects (Eve's Residences, UI/UX Design Systems, Gaming Banner, Posters, 3D Product Mock-ups, Typography, etc.).
+- Grounded in Joseph's full developer profile (IT graduate from ICCT, Full-Stack developer in JS/TS, Next.js, PHP, Python, SQL/MySQL, Google Apps Script, Linux server administration, UI/UX design).
+
+### 3. Custom Project Proposal Engine
+- When a user asks: *"Can you build an e-commerce platform?", "Can you make a mobile booking system?", "Can you develop a real estate portal with Stripe?"* (projects not yet in the portfolio):
+  - **Direct Assurance**: Confirms enthusiastically: *"Yes, Joseph can definitely build that for you!"*
+  - **Tailored Plan**: Automatically drafts a structured project blueprint:
+    - 🏗️ **Recommended Architecture & Tech Stack**
+    - 📦 **Key Deliverables & Functional Modules**
+    - 📅 **Phased Development Roadmap** (Phase 1: Discovery & UI/UX, Phase 2: Core Engineering, Phase 3: QA & Launch)
+    - 📬 **Call to Action**: Quick button or prompt to switch to the Outlook Express tab or email Joseph directly.
+
+---
+
+## Proposed Changes
+
+### Component 1: AI Knowledge Engine & API Route
+- [NEW] [`src/lib/portfolioAi.ts`](file:///d:/TEPHDYTECH/WEB%20APP/PORTFOLIO/src/lib/portfolioAi.ts):
+  - Centralized knowledge base containing Joseph's bio, skills, Behance portfolio data, and GitHub repo integration.
+  - Logic to detect custom client project requests and synthesize structured architectural proposals.
+- [NEW] [`src/app/api/chat/route.ts`](file:///d:/TEPHDYTECH/WEB%20APP/PORTFOLIO/src/app/api/chat/route.ts):
+  - Next.js App Router API route accepting user messages and repositories list.
+  - Calls `@google/genai` if `GEMINI_API_KEY` is present, or returns the structured knowledge response.
+
+### Component 2: Enhanced Contact Window Component
+- [MODIFY] [`src/components/windows/ContactWindow.tsx`](file:///d:/TEPHDYTECH/WEB%20APP/PORTFOLIO/src/components/windows/ContactWindow.tsx):
+  - Add tab switcher below the titlebar: `[ 💬 AI Copilot ]` vs `[ ✉️ Outlook Express ]`.
+  - Embed chat message list, quick suggestion chips, message input with Enter-to-send, loading indicator, and clear chat button.
+  - Retain the full Outlook Express contact form in the email tab.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Run `npx tsc --noEmit` to verify type safety across the new API route and components.
+- Run `npm run lint` to verify clean ESLint compliance.
+- Run `npm run build` to verify Next.js routes and static/API builds.
+
+### Manual Verification
+- Test asking the AI about GitHub repositories: verify it lists Joseph's repos with tech and links.
+- Test asking the AI about Behance: verify it cites his visual design and branding work.
+- Test asking for a project not in the portfolio (e.g. *"Can you build a doctor appointment booking app?"*): verify it confirms *"Yes, Joseph can definitely build that for you!"* and establishes a structured implementation plan.
+- Test switching between AI Chat and Outlook Express tabs; test sending an email message.

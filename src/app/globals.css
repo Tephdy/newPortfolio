@@ -1,0 +1,404 @@
+@import "tailwindcss";
+
+:root {
+  --color-sand: #f4eee2;
+  --color-sand-dark: #e9e0d0;
+  --color-sand-tray: #dcd7cd;
+  --color-border: #1e1e1e;
+  --color-blue: #3d5a80;
+  --color-coral: #e07a5f;
+  --color-yellow: #f4a261;
+  --color-amber: #e9c46a;
+  --color-green: #90be6d;
+  --color-desktop: #66736f;
+  --color-bg-body: #7d7775;
+}
+
+body {
+  background-color: var(--color-bg-body);
+  color: #2b2b2b;
+  font-family: var(--font-space-mono), monospace, sans-serif;
+  image-rendering: auto;
+  user-select: none;
+}
+
+/* Retro Windows Theme Classes */
+.retro-window {
+  background: var(--color-sand);
+  border: 3px solid var(--color-border);
+  box-shadow: 6px 6px 0px var(--color-border);
+  position: relative;
+}
+
+.window-host {
+  position: relative;
+  min-height: 0;
+  isolation: isolate;
+  background-color: var(--color-desktop);
+  background-image:
+    linear-gradient(rgba(244, 238, 226, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 238, 226, 0.08) 1px, transparent 1px),
+    repeating-linear-gradient(0deg, rgba(30, 30, 30, 0.08) 0 2px, transparent 2px 4px);
+  background-size: 24px 24px, 24px 24px, 100% 4px;
+}
+
+.window-host::before {
+  content: 'JOSEPH AMANDY OS // v1.0';
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.25rem;
+  z-index: 0;
+  color: rgba(244, 238, 226, 0.15);
+  font-family: var(--font-vt323), monospace;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  transform: rotate(-4deg);
+}
+
+.app-window {
+  position: absolute;
+  min-width: 320px;
+  min-height: 240px;
+  overflow: hidden;
+  transition: opacity 0.1s ease;
+}
+
+.app-window.is-maximized {
+  top: 0.75rem !important;
+  right: 0.75rem !important;
+  bottom: 0.75rem !important;
+  left: 0.75rem !important;
+  width: calc(100% - 1.5rem) !important;
+  height: calc(100% - 1.5rem) !important;
+}
+
+.app-window > .retro-titlebar {
+  flex: 0 0 auto;
+  cursor: grab;
+  user-select: none;
+}
+
+.app-window > .retro-titlebar:active {
+  cursor: grabbing;
+}
+
+.window-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.resize-grip {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  z-index: 20;
+  background: repeating-linear-gradient(135deg, transparent 0 3px, #1e1e1e 3px 5px);
+  opacity: 0.75;
+}
+
+body.is-dragging,
+body.is-resizing {
+  user-select: none;
+}
+
+.retro-titlebar {
+  background: var(--color-coral);
+  border-bottom: 3px solid var(--color-border);
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  color: var(--color-border);
+}
+
+.retro-titlebar.blue {
+  background: var(--color-blue);
+  color: #ffffff;
+}
+
+.retro-titlebar.yellow {
+  background: var(--color-yellow);
+  color: var(--color-border);
+}
+
+.retro-titlebar.coral {
+  background: var(--color-coral);
+  color: #ffffff;
+}
+
+.retro-btn {
+  background: var(--color-sand);
+  border: 2px solid var(--color-border);
+  box-shadow: 3px 3px 0px var(--color-border);
+  font-weight: 700;
+  transition: all 0.1s ease;
+  cursor: pointer;
+}
+
+.retro-btn:hover {
+  background: var(--color-sand-dark);
+}
+
+.retro-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--color-border);
+}
+
+.retro-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.retro-input {
+  background: #ffffff;
+  border: 2px solid var(--color-border);
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.1);
+  padding: 6px 10px;
+  outline: none;
+}
+
+.retro-input:focus {
+  border-color: var(--color-coral);
+}
+
+.skill-meter {
+  width: 100%;
+  height: 12px;
+  appearance: none;
+  border: 2px solid var(--color-border);
+  background: #ffffff;
+}
+
+.skill-meter::-webkit-meter-bar {
+  background: #ffffff;
+  border: 0;
+}
+
+.skill-meter::-webkit-meter-optimum-value {
+  background: var(--color-blue);
+}
+
+.skill-meter::-moz-meter-bar {
+  background: var(--color-blue);
+}
+
+.skill-bar {
+  height: 12px;
+  border: 2px solid var(--color-border);
+  background: #ffffff;
+}
+
+.skill-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--color-coral);
+}
+
+.behance-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.behance-project {
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.behance-project:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--color-border);
+}
+
+.behance-project img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-bottom: 2px solid var(--color-border);
+}
+
+/* Desktop Icons */
+.desktop-icon {
+  cursor: pointer;
+  text-align: center;
+  width: 80px;
+  transition: transform 0.1s;
+}
+
+.desktop-icon:hover {
+  transform: scale(1.05);
+}
+
+.desktop-icon .icon-box {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 4px auto;
+  border: 2px solid var(--color-border);
+  background: var(--color-sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 3px 3px 0px var(--color-border);
+}
+
+/* Window Controls */
+.window-controls button {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-border);
+  background: var(--color-sand);
+  font-size: 10px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+.window-controls button:hover {
+  background: var(--color-coral);
+  color: white;
+}
+
+/* Custom Scrollbar for Retro feel */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-sand);
+  border-left: 2px solid var(--color-border);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-coral);
+  border: 2px solid var(--color-border);
+}
+
+/* Modals */
+.live-view-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(30, 30, 30, 0.78);
+  backdrop-filter: blur(2px);
+}
+
+.live-view-window {
+  width: min(1100px, 100%);
+  height: min(780px, 92vh);
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.live-view-frame {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  border: 0;
+  background: #ffffff;
+}
+
+/* Mobile Responsive Adaptations */
+@media (max-width: 767px) {
+  body {
+    font-size: clamp(0.78rem, 2.8vw, 0.95rem);
+  }
+
+  .window-host {
+    padding: 0 0 4.5rem !important;
+    overflow-x: hidden;
+  }
+
+  .app-window {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 4.5rem !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - 4.5rem) !important;
+    min-width: 0;
+    border: 0 !important;
+    box-shadow: none !important;
+    position: fixed !important;
+  }
+
+  .app-window.is-maximized {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 4.5rem !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - 4.5rem) !important;
+  }
+
+  .app-window > .retro-titlebar {
+    min-height: 48px;
+    padding: 8px 12px;
+    cursor: default;
+  }
+
+  .app-window .resize-grip,
+  .app-window .window-controls {
+    display: none;
+  }
+
+  .mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 60;
+    height: 4.25rem !important;
+    padding: 0.35rem 0.5rem;
+    border-top: 3px solid var(--color-border);
+    background: var(--color-sand-tray);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .mobile-nav-items {
+    display: flex !important;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-around;
+    gap: 0.2rem !important;
+    margin: 0 !important;
+  }
+
+  .mobile-nav .mobile-nav-button {
+    flex: 1 1 0;
+    max-width: 3rem;
+    height: 2.85rem;
+    padding: 0.25rem 0.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    font-size: 0.6rem;
+    line-height: 1;
+  }
+
+  .mobile-nav .mobile-nav-button span {
+    display: none;
+  }
+}
