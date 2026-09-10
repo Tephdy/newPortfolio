@@ -225,6 +225,8 @@ How can I assist you today?`,
     { label: '💻 GitHub Repos', prompt: 'What public projects have you built on GitHub?' },
     { label: '🎨 Behance Showcase', prompt: 'Tell me about your graphic design & branding on Behance.' },
     { label: '⚡ Core Tech Stack', prompt: 'What is your primary programming and tech stack?' },
+    { label: '🖌️ Design a Logo', prompt: 'Can you design a logo and full brand identity kit for my business?' },
+    { label: '🎬 Edit a Video', prompt: 'Can you edit a promotional video for me? I need a 2-minute highlight reel.' },
     { label: '🚀 Build an E-commerce App', prompt: 'Can you build a full-stack e-commerce store with Stripe and Next.js?' },
     { label: '📱 Build a Booking System', prompt: 'Can you build a real-time booking and appointment management portal?' },
   ];

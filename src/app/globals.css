@@ -314,94 +314,235 @@ body.is-resizing {
   background: #ffffff;
 }
 
-/* Mobile Responsive Adaptations */
-/* Mobile Responsive Adaptations */
+/* ══════════════════════════════════════════════
+   MOBILE / HANDHELD RESPONSIVE ENHANCEMENTS
+   ══════════════════════════════════════════════ */
 @media (max-width: 767px) {
+  /* ── Base typography ── */
   body {
     font-size: clamp(0.78rem, 2.8vw, 0.95rem);
     color: black;
+    /* Prevent pull-to-refresh & bounce on iOS */
+    overscroll-behavior: none;
   }
 
+  /* ── Hide desktop watermark on mobile ── */
+  .window-host::before {
+    display: none;
+  }
+
+  /* ── Desktop workspace ── */
   .window-host {
-    padding: 0 0 4.5rem !important;
+    padding: 0 0 4.75rem !important;
     overflow-x: hidden;
+    /* Allow smooth native scroll on mobile */
+    -webkit-overflow-scrolling: touch;
   }
 
+  /* ── App windows: full-screen native feel ── */
   .app-window {
     top: 0 !important;
     right: 0 !important;
-    bottom: 4.5rem !important;
+    bottom: 4.75rem !important;
     left: 0 !important;
     width: 100% !important;
-    height: calc(100vh - 4.5rem) !important;
+    height: calc(100dvh - 4.75rem) !important;
     min-width: 0;
     border: 0 !important;
     box-shadow: none !important;
+    border-radius: 0 !important;
     position: fixed !important;
+    /* Slide-up entry animation */
+    animation: window-slide-in 0.22s cubic-bezier(0.34, 1.36, 0.64, 1) both;
+  }
+
+  @keyframes window-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .app-window.is-maximized {
     top: 0 !important;
     right: 0 !important;
-    bottom: 4.5rem !important;
+    bottom: 4.75rem !important;
     left: 0 !important;
     width: 100% !important;
-    height: calc(100vh - 4.5rem) !important;
+    height: calc(100dvh - 4.75rem) !important;
   }
 
-  .app-window>.retro-titlebar {
-    min-height: 48px;
-    padding: 8px 12px;
+  /* ── Titlebar: taller for thumb reach, no drag cursor ── */
+  .app-window > .retro-titlebar {
+    min-height: 52px;
+    padding: 10px 14px;
     cursor: default;
+    /* Slightly larger title text on mobile */
+    font-size: 0.75rem;
   }
 
-  .app-window .resize-grip,
-  .app-window .window-controls {
+  /* ── Hide desktop-only chrome ── */
+  .app-window .resize-grip {
     display: none;
   }
 
+  /* Show window controls on mobile (close button) */
+  .app-window .window-controls {
+    display: flex !important;
+  }
+
+  /* Larger window control buttons for touch ── */
+  .app-window .window-controls button {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    border-radius: 2px;
+  }
+
+  /* ── Scrollbars: thin on mobile ── */
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-coral);
+    border: 0;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border: 0;
+  }
+
+  /* ── Desktop icons: hide vertical column, show home grid ── */
+  .desktop-icons-column {
+    display: none !important;
+  }
+
+  .mobile-home-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    padding: 1.25rem 1rem 0.75rem;
+    width: 100%;
+  }
+
+  /* ── Mobile home grid icon card ── */
+  .mobile-app-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mobile-app-icon:active .mobile-app-icon-box {
+    transform: scale(0.90);
+    opacity: 0.8;
+  }
+
+  .mobile-app-icon-box {
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 2.5px solid var(--color-border);
+    box-shadow: 3px 3px 0px var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.12s ease, opacity 0.12s ease;
+    border-radius: 4px;
+  }
+
+  .mobile-app-icon-label {
+    font-size: 0.6rem;
+    font-family: monospace;
+    font-weight: 700;
+    color: #f4eee2;
+    text-align: center;
+    line-height: 1.2;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    max-width: 4rem;
+    word-break: break-word;
+  }
+
+  /* ── Bottom navigation bar ── */
   .mobile-nav {
     position: fixed;
     right: 0;
     bottom: 0;
     left: 0;
     z-index: 60;
-    height: 4.25rem !important;
-    padding: 0.35rem 0.5rem;
+    height: 4.75rem !important;
+    /* Add safe area inset for phones with home indicator */
+    padding: 0.3rem 0.4rem calc(0.3rem + env(safe-area-inset-bottom)) !important;
     border-top: 3px solid var(--color-border);
     background: var(--color-sand-tray);
     display: flex !important;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
   }
 
   .mobile-nav-items {
     display: flex !important;
     width: 100%;
-    box-sizing: border-box;
     align-items: center;
     justify-content: space-around;
-    gap: 0.2rem !important;
+    gap: 0 !important;
     margin: 0 !important;
   }
 
+  /* ── Individual nav buttons ── */
   .mobile-nav .mobile-nav-button {
     flex: 1 1 0;
-    max-width: 3rem;
-    height: 2.85rem;
-    padding: 0.25rem 0.1rem;
+    min-width: 0;
+    height: 3.2rem;
+    padding: 0.3rem 0.15rem 0.25rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.1rem;
-    font-size: 0.6rem;
+    gap: 0.2rem;
+    font-size: 0.5rem;
+    font-weight: 700;
     line-height: 1;
     color: #1e1e1e;
+    border-radius: 6px;
+    transition: background 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    position: relative;
   }
 
-  /* FORCES ALL SVG ICONS IN THE TASKBAR TO BLACK */
+  /* Active window indicator dot ── */
+  .mobile-nav .mobile-nav-button.is-active-window::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-coral);
+  }
+
+  /* ── Start button – slightly larger ── */
+  .mobile-nav .mobile-start {
+    flex: 0 0 auto;
+    width: 3.2rem;
+    border-radius: 6px;
+    font-size: 0.6rem;
+  }
+
+  /* ── Force all SVG icons in taskbar to always be black ── */
   .mobile-nav svg,
   .mobile-nav button svg,
   .mobile-nav .mobile-nav-button svg {
@@ -410,8 +551,73 @@ body.is-resizing {
     fill: none;
   }
 
-  /* Only hide the text labels, NOT the icon container */
+  /* Only hide text labels, NOT icon divs ── */
   .mobile-nav .mobile-nav-button .mobile-nav-label {
     display: none;
+  }
+
+  /* ── Start Menu: full-width bottom sheet on mobile ── */
+  #start-menu {
+    bottom: 4.75rem !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-height: 60vh;
+    overflow-y: auto;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    border-top: 3px solid var(--color-border) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -6px 24px rgba(30,30,30,0.25) !important;
+    animation: start-menu-slide-up 0.2s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  }
+
+  @keyframes start-menu-slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+  }
+
+  #start-menu .start-menu-item {
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* ── Live view modal: full height on mobile ── */
+  .live-view-window {
+    width: 100% !important;
+    height: calc(100dvh - 4.75rem) !important;
+    min-height: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  /* ── Contact window chat input: larger for keyboards ── */
+  .retro-input {
+    font-size: 1rem !important; /* prevents iOS zoom on focus */
+    min-height: 2.5rem;
+  }
+
+  /* ── Behance gallery: 2-col on small screens ── */
+  .behance-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ── Hide the clock tray on very narrow screens ── */
+  .mobile-clock {
+    display: none !important;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 390px) {
+  .mobile-home-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mobile-app-icon-box {
+    width: 3rem;
+    height: 3rem;
   }
 }

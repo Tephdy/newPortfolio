@@ -90,8 +90,8 @@ export function Taskbar({
                 }
               }}
               className={`retro-btn px-3 py-1 text-xs text-black font-bold font-mono mobile-nav-button flex items-center space-x-1.5 ${isActive
-                  ? 'bg-[#f4a261] border-[#1e1e1e] shadow-[inset_1px_1px_0px_rgba(0,0,0,0.2)]'
-                  : 'bg-white hover:bg-[#e9e0d0]'
+                ? 'bg-[#f4a261] border-[#1e1e1e] shadow-[inset_1px_1px_0px_rgba(0,0,0,0.2)]'
+                : 'bg-white hover:bg-[#e9e0d0]'
                 }`}
               title={item.label}
             >
