@@ -19,13 +19,7 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
-    if (!apiKey) {
-      console.error('❌ GEMINI_API_KEY is missing from environment variables.');
-      const reply = generatePortfolioAiResponse(lastUserMessage, repos);
-      return NextResponse.json({ reply });
-    }
-
-    try {
+    if (apiKey) {
       const ai = new GoogleGenAI({ apiKey });
 
       const reposContext =
@@ -47,24 +41,35 @@ export async function POST(req: Request) {
         parts: [{ text: m.content }],
       }));
 
-      // Using the standard active model name
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.6-flash',
-        contents: formattedContents,
-        config: {
-          systemInstruction,
-        },
-      });
+      // Retry loop to handle temporary 503 Server Overload errors
+      const maxRetries = 3;
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash', // Or use gemini-3.6-flash
+            contents: formattedContents,
+            config: {
+              systemInstruction,
+            },
+          });
 
-      const reply = response.text;
-      if (reply) {
-        return NextResponse.json({ reply });
+          const reply = response.text;
+          if (reply) {
+            return NextResponse.json({ reply });
+          }
+        } catch (geminiError: any) {
+          console.warn(`Attempt ${attempt} failed with status/error:`, geminiError);
+          if (attempt === maxRetries) {
+            console.error('🔥 GEMINI API PERMANENTLY FAILED AFTER RETRIES');
+          } else {
+            // Wait 1 second before trying again
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        }
       }
-    } catch (geminiError) {
-      console.error('🔥 GEMINI API CONNECTION FAILED:', geminiError);
     }
 
-    // Fallback if API throws an error
+    // Final fallback to local engine if all retries fail
     const reply = generatePortfolioAiResponse(lastUserMessage, repos);
     return NextResponse.json({ reply });
   } catch (error) {
