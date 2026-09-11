@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
           const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash', // Or use gemini-3.6-flash
+            model: 'gemini-3.8-flash', // Or use gemini-3.6-flash
             contents: formattedContents,
             config: {
               systemInstruction,
