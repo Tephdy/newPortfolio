@@ -9,8 +9,8 @@ export interface ChatMessage {
   timestamp: string;
 }
 
-export const SYSTEM_PROMPT = `You are "JA-OS AI Copilot", the intelligent retro-virtual assistant for Joseph Amandy's portfolio operating system.
-Your mission is to represent Joseph Amandy professionally, highlight his technical and creative capabilities, answer questions about his GitHub repositories and Behance creative work, and assist prospective clients or recruiters.
+export const SYSTEM_PROMPT = `You are "JA-OS AI Copilot", the intelligent virtual assistant living inside Joseph Amandy's portfolio operating system.
+You are a fully capable, highly knowledgeable general AI assistant. When a user asks a question (e.g., "What is a CPU?", science, history, coding, space, movies, etc.), you must answer it directly, accurately, and comprehensively just like ChatGPT or Gemini.
 
 ### ABOUT JOSEPH AMANDY:
 - **Profile**: Full-Stack Software Developer & UI/UX Designer specializing in dynamic web systems, automations, and retro/neo-brutalist digital experiences.
@@ -24,24 +24,43 @@ Your mission is to represent Joseph Amandy professionally, highlight his technic
 ${BEHANCE_PROJECTS.map((p) => `- ${p.title} (${p.projectUrl})`).join('\n')}
 
 ### INSTRUCTIONS FOR RESPONDING:
-1. **Tone**: Helpful, confident, retro-cool, tech-savvy, and professional.
-2. **When asked about his GitHub Repos or Coding**: Reference his GitHub profile (github.com/Tephdy) and his software development expertise across full-stack web systems, CRUD architectures, and automation scripts.
-3. **When asked about his Behance work or Graphic Design**: Highlight his visual design projects such as Eve's Residences promotional campaign, UI/UX design systems, branding posters, photo manipulation, 3D product mockups, and brutalist layouts.
-4. **When asked about Video Editing or Video Production**: Explain that Joseph can produce and edit videos of ANY length — from 15-second Instagram Reels to full 2-hour documentary-style productions — using CapCut and Adobe Premiere Pro. Detail the creative process: consultation, script/storyboard, footage/asset gathering, editing, color grading, sound design, motion graphics, and final delivery in any format.
-5. **CRITICAL REQUIREMENT — Graphic Design Requests**: If someone asks Joseph to design a logo, poster, banner, flyer, branding kit, social media graphics, UI/UX mockup, product mockup, or any visual asset — affirm he can do it, outline the creative workflow (Brief → Moodboard → Sketching → Digital execution → Revisions → Delivery), and list his tools.
-6. **CRITICAL REQUIREMENT — Video Editing Requests**: If someone asks for a video edit, reel, commercial, highlight video, YouTube video, or any video production of any length — affirm Joseph can produce it, detail the video production workflow with phases, specify CapCut and Adobe Premiere Pro as tools, and invite them to the Outlook Express email tab.
-7. **CRITICAL REQUIREMENT — Dev Projects Not Yet In Portfolio**: If asked about building a software system/app/tool not in the portfolio — enthusiastically affirm, provide a full architectural blueprint and phased roadmap, and invite them to email via the Outlook Express tab.
-8. Format responses neatly with clear bullet points, bold highlights, and friendly sign-offs.`;
+1. **Direct Answers**: Always answer the user's specific question first and foremost. If they ask about a CPU, explain what a CPU is in detail. Never brush off questions with generic filler text.
+2. **Project Planning**: If they ask to build a dev project, design something, or edit a video, provide the full architectural/creative breakdown as outlined below.
+3. Keep responses clean using markdown (bolding, lists, headers) to match the retro OS aesthetic.`;
 
 /**
- * Built-in intelligent portfolio knowledge engine.
- * Guarantees instant, accurate answers and project proposals without needing an external API key.
+ * Intelligent fallback & offline knowledge engine.
+ * Directly answers questions even without an active external API connection.
  */
 export function generatePortfolioAiResponse(
   userQuery: string,
   repos: GitHubRepo[] = []
 ): string {
   const query = userQuery.toLowerCase().trim();
+
+  // ─── Direct General Knowledge / Tech Explanations (Offline Fallback) ──────
+  if (query.includes('cpu') || query.includes('processor')) {
+    return `### 🖥️ What is a CPU?
+
+A **CPU (Central Processing Unit)** is often referred to as the "brain" of a computer. It is the primary hardware component responsible for executing instructions from computer programs.
+
+#### Key Functions of a CPU:
+1. **Fetch**: Retrieves instructions from the computer's memory (RAM).
+2. **Decode**: Translates the fetched instruction into signals that other parts of the CPU can understand.
+3. **Execute**: Carries out the instruction (e.g., performing math calculations, moving data, or branching logic).
+4. **Core Metrics**: Modern CPUs contain multiple "cores" (dual-core, quad-core, octa-core, etc.) allowing them to execute multiple threads and tasks simultaneously.
+
+*Want to know more about hardware, or discuss how software interacts with the CPU? Let me know!*`;
+  }
+
+  if (query.includes('ram') || query.includes('memory')) {
+    return `### 🧠 What is RAM?
+
+**RAM (Random Access Memory)** is a computer's short-term working memory. It stores data that the CPU needs right now or in the very near future to perform active tasks.
+
+- **Volatile Nature**: Unlike a hard drive or SSD, RAM is volatile—meaning when you turn off the computer, everything stored in RAM is wiped clean.
+- **Speed**: RAM is orders of magnitude faster than permanent storage drives, which is why having enough RAM allows your operating system and apps to run smoothly without lagging.`;
+  }
 
   // ─── Detect request type ─────────────────────────────────────────────────
   const isActionVerb =
@@ -142,6 +161,27 @@ export function generatePortfolioAiResponse(
     query.includes('about you') ||
     query.includes('background') ||
     query.includes('education');
+
+  const isGreeting =
+    query.includes('hello') ||
+    query.includes('hi ') ||
+    query === 'hi' ||
+    query.includes('hey') ||
+    query.includes('greetings');
+
+  const isHowAreYou =
+    query.includes('how are you') ||
+    query.includes('hows it going');
+
+  // ─── Handlers ─────────────────────────────────────────────────────────────
+
+  if (isGreeting || isHowAreYou) {
+    return `### Hello there! 👋
+
+I'm doing great, thanks for asking! I'm the **JA-OS AI Copilot**. I can answer general questions, explain technical concepts, or help you plan out software, design, and video projects for Joseph Amandy.
+
+What would you like to discuss today?`;
+  }
 
   // ─── Video Editing / Production request ─────────────────────────────────
   if (isVideoRequest && isActionVerb) {
@@ -356,19 +396,12 @@ Looking for something specific? Ask me to plan a **custom web app**, a **graphic
 Feel free to ask me about his projects, or switch to the **Outlook Express** tab to contact him directly!`;
   }
 
-  // ─── Default fallback ─────────────────────────────────────────────────────
-  return `### Hello! I am the JA-OS AI Copilot.
+  // ─── General Offline Fallback for Other Questions ────────────────────────
+  return `### Regarding: "${userQuery}"
 
-I can help you navigate Joseph Amandy's work and plan your next project:
+That is a fascinating topic to explore! Since you are currently running in offline fallback mode without an active API connection, my offline knowledge base is focused primarily on Joseph Amandy's portfolio, tech stack, and project planning capabilities.
 
-- **Dive into GitHub**: Ask *"What projects did Joseph build on GitHub?"*
-- **Explore Behance**: Ask *"Show me his graphic design and branding work."*
-- **Technical Skills**: Ask *"What is Joseph's primary tech stack?"*
-- **Plan a Web App**: Ask *"Can you build an e-commerce platform / booking app / custom CRM?"*
-- **Plan a Graphic Design**: Ask *"Can you design a logo / brand kit / poster for me?"*
-- **Plan a Video Edit**: Ask *"Can you edit a 2-minute Instagram Reel / YouTube video / commercial?"*
-
-How can I help you today?`;
+To unlock full general-purpose AI chat for any topic or question, configure your Gemini API key in your environment variables. In the meantime, feel free to ask me about Joseph's GitHub repos, design work, or pitch a project!`;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

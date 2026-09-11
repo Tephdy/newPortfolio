@@ -63,11 +63,11 @@ export function ContactWindow({
       role: 'assistant',
       content: `### 👋 Welcome to Joseph Amandy's OS!
 
-I am the **JA-OS AI Copilot**. I have access to Joseph's technical background, **GitHub repositories**, and **Behance design projects**.
+I am the **JA-OS AI Copilot**. I can chat about anything, assist with technical projects, or share details about Joseph's background, **GitHub repositories**, and **Behance design projects**.
 
 - 💡 **Ask about GitHub**: *"What projects have you built?"*
 - 🎨 **Ask about Behance**: *"Tell me about your visual design work."*
-- 🚀 **Pitch a New Project**: *"Can you build a custom booking system / SaaS / mobile app?"* — I will immediately outline an architectural blueprint and roadmap for how Joseph can build it!
+- 💬 **Or just chat**: Say hello, ask questions, or pitch an idea!
 
 How can I assist you today?`,
       timestamp: '12:00 PM',
@@ -120,7 +120,7 @@ How can I assist you today?`,
     setIsThinking(true);
 
     try {
-      // Call Next.js API route /api/chat
+      // Call Next.js API route /api/chat with full history array
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -140,7 +140,7 @@ How can I assist you today?`,
       }
 
       if (!replyText) {
-        // Fallback to local engine
+        // Fallback to local conversational engine
         replyText = generatePortfolioAiResponse(textToSend, repos);
       }
 
@@ -172,7 +172,7 @@ How can I assist you today?`,
       {
         id: `welcome-${Date.now()}`,
         role: 'assistant',
-        content: `### Chat History Reset\n\nReady for new questions! Ask about GitHub, Behance, or request an implementation plan for your next project.`,
+        content: `### Chat History Reset\n\nReady for a new conversation! Feel free to ask questions, chat about tech, or explore Joseph's portfolio.`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ]);
@@ -222,13 +222,11 @@ How can I assist you today?`,
   };
 
   const quickPrompts = [
+    { label: '👋 Say Hello', prompt: 'Hey there! How is your day going?' },
     { label: '💻 GitHub Repos', prompt: 'What public projects have you built on GitHub?' },
     { label: '🎨 Behance Showcase', prompt: 'Tell me about your graphic design & branding on Behance.' },
     { label: '⚡ Core Tech Stack', prompt: 'What is your primary programming and tech stack?' },
-    { label: '🖌️ Design a Logo', prompt: 'Can you design a logo and full brand identity kit for my business?' },
-    { label: '🎬 Edit a Video', prompt: 'Can you edit a promotional video for me? I need a 2-minute highlight reel.' },
-    { label: '🚀 Build an E-commerce App', prompt: 'Can you build a full-stack e-commerce store with Stripe and Next.js?' },
-    { label: '📱 Build a Booking System', prompt: 'Can you build a real-time booking and appointment management portal?' },
+    { label: '🚀 Build an App', prompt: 'Can you help me plan out a full-stack web application?' },
   ];
 
   const toolbar = (
@@ -237,11 +235,10 @@ How can I assist you today?`,
         <button
           type="button"
           onClick={() => setActiveTab('chat')}
-          className={`retro-btn px-3 py-1 flex items-center space-x-1.5 ${
-            activeTab === 'chat'
+          className={`retro-btn px-3 py-1 flex items-center space-x-1.5 ${activeTab === 'chat'
               ? 'bg-[#f4a261] border-[#1e1e1e] shadow-[inset_1px_1px_0px_rgba(0,0,0,0.2)]'
               : 'bg-white'
-          }`}
+            }`}
         >
           <Bot size={13} />
           <span>AI Copilot (Chat)</span>
@@ -249,11 +246,10 @@ How can I assist you today?`,
         <button
           type="button"
           onClick={() => setActiveTab('email')}
-          className={`retro-btn px-3 py-1 flex items-center space-x-1.5 ${
-            activeTab === 'email'
+          className={`retro-btn px-3 py-1 flex items-center space-x-1.5 ${activeTab === 'email'
               ? 'bg-[#f4a261] border-[#1e1e1e] shadow-[inset_1px_1px_0px_rgba(0,0,0,0.2)]'
               : 'bg-white'
-          }`}
+            }`}
         >
           <Mail size={13} />
           <span>Outlook Express (Email)</span>
@@ -317,28 +313,25 @@ How can I assist you today?`,
             {chatMessages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex items-start space-x-2.5 ${
-                  msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                }`}
+                className={`flex items-start space-x-2.5 ${msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                  }`}
               >
                 {/* Avatar */}
                 <div
-                  className={`w-7 h-7 border-2 border-[#1e1e1e] flex items-center justify-center text-xs font-bold shadow-[1px_1px_0px_#1e1e1e] flex-shrink-0 ${
-                    msg.role === 'user'
+                  className={`w-7 h-7 border-2 border-[#1e1e1e] flex items-center justify-center text-xs font-bold shadow-[1px_1px_0px_#1e1e1e] flex-shrink-0 ${msg.role === 'user'
                       ? 'bg-[#e07a5f] text-white'
                       : 'bg-[#3d5a80] text-white'
-                  }`}
+                    }`}
                 >
                   {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
                 </div>
 
                 {/* Bubble */}
                 <div
-                  className={`max-w-[85%] retro-window p-3 text-xs leading-relaxed shadow-[2px_2px_0px_#1e1e1e] ${
-                    msg.role === 'user'
+                  className={`max-w-[85%] retro-window p-3 text-xs leading-relaxed shadow-[2px_2px_0px_#1e1e1e] ${msg.role === 'user'
                       ? 'bg-[#ffffff] border-[#1e1e1e]'
                       : 'bg-white border-[#1e1e1e]'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between border-b border-gray-200 pb-1 mb-2 text-[10px] text-gray-500">
                     <span className="font-bold text-[#1e1e1e]">
@@ -358,7 +351,7 @@ How can I assist you today?`,
             {isThinking && (
               <div className="flex items-center space-x-2 text-xs font-mono text-gray-700 bg-white border-2 border-[#1e1e1e] p-2.5 max-w-xs shadow-[2px_2px_0px_#1e1e1e]">
                 <Loader2 size={14} className="animate-spin text-[#e07a5f]" />
-                <span>AI Copilot is analyzing & planning...</span>
+                <span>AI Copilot is thinking...</span>
               </div>
             )}
             <div ref={chatBottomRef} />
@@ -368,7 +361,7 @@ How can I assist you today?`,
           <div className="p-3 bg-[#e9e0d0] border-t-2 border-[#1e1e1e] flex items-center space-x-2 flex-shrink-0">
             <input
               type="text"
-              placeholder="Ask about my repos, Behance work, or pitch a project idea..."
+              placeholder="Ask anything, talk about tech, or pitch a project idea..."
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -533,9 +526,9 @@ function FormattedMessage({
           );
         }
 
-        if (trimmed.startsWith('1. ') || trimmed.startsWith('2. ') || trimmed.startsWith('3. ') || trimmed.startsWith('4. ')) {
+        if (trimmed.match(/^[0-9]+\.\s+/)) {
           const num = trimmed.slice(0, 3);
-          const itemText = trimmed.slice(3);
+          const itemText = trimmed.replace(/^[0-9]+\.\s+/, '');
           return (
             <div key={idx} className="flex items-start space-x-1.5 pl-1.5 my-0.5">
               <span className="font-bold text-[#3d5a80]">{num}</span>
@@ -567,7 +560,6 @@ function ParseInlineMarkdown({
   text: string;
   onSwitchToEmail?: () => void;
 }) {
-  // Replace links e.g. [text](url)
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts: React.ReactNode[] = [];
   let lastIdx = 0;
